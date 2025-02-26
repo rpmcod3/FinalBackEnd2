@@ -1,0 +1,26 @@
+{
+  "name": "nuevoproyectopara2ndapreentrega",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./src/index.js",
+    "dev:local": "node --watch --env-file=.env src/index.js"
+  },
+  "keywords": [],
+  "author": "Mr2025",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bootstrap": "^5.2.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-handlebars": "^8.0.1",
+    "mongoose": "^8.9.5",
+    "mongoose-paginate-v2": "^1.9.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.1.9",
+    "socket.io": "^4.8.1"
+  }
+}

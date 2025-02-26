@@ -1,0 +1,54 @@
+<header id="header">
+  <a href="/products" class="logo">Productos</a>
+
+  <nav>
+    <ul>
+      <li><a href="/products" class="btn">Volver</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div>
+
+
+<h1 id="page-title">{{title}}</h1>
+<p id="total-carts">Total de carritos: {{totalCarts}}</p>
+
+{{#each carts}}
+
+</div>
+
+<div class="cart-container">
+    <h2 class="cart-id">Carrito ID: {{_id}}</h2>
+    {{#if products.length}}
+        <ul class="product-list">
+        {{#each products}}
+            <li class="product-item">
+                <span class="product-title">Producto: {{product.title}}</span><br>
+                <span class="product-price">Precio: {{product.price}}</span><br>
+                <span class="product-quantity">Cantidad: {{quantity}}</span>
+            </li>
+        {{/each}}
+        </ul>
+    {{else}}
+        <p class="empty-cart">El carrito no tiene productos.</p>
+    {{/if}}
+</div>
+{{/each}}
+
+<div id="pagination">
+  {{#if hasPrevPage}}
+    <a href="/carts?page={{prevPage}}" class="btn">Página anterior</a>
+  {{else}}
+    <button class="btn disabled" disabled>Página anterior</button>
+  {{/if}}
+
+  <span class="current-page">Página {{currentPage}} de {{totalPages}}</span>
+
+  {{#if hasNextPage}}
+    <a href="/carts?page={{nextPage}}" class="btn">Página siguiente</a>
+  {{else}}  
+    <button class="btn disabled" disabled>Página siguiente</button>
+  {{/if}}
+</div>
+

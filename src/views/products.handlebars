@@ -1,0 +1,129 @@
+
+<header>
+  <a href="/products" class="logo">Productos</a>
+
+  <nav>
+    <ul>
+      <li><a href="/upload" class="btn">Upload</a></li>
+      <li><a href="/carts" class="btn">Carrito</a></li>
+    </ul>
+  </nav>
+</header>
+
+{{!-- 
+<div id="content">
+  {{#each products}}
+  <div class="card" id="product-{{this._id}}">
+    <img src="{{this.thumbnail}}" alt="{{this.title}}">
+    <div class="content">
+      <h3>{{this.title}}</h3>
+      <p>{{this.price}}</p>
+      <p>{{this.description}}</p>
+
+      <!-- Botón para eliminar el producto, asegurándote de que el data-id esté configurado -->
+      <button class="btn delete-btn" data-id="{{this._id}}">Eliminar</button>
+      
+      <a href="/addToCart/{{this._id}}" class="btn">Agregar al carrito</a>
+    </div>
+  </div>
+  {{/each}}
+</div> --}}
+<div id="content">
+  {{#each products}}
+  <div class="card" id="product-{{this._id}}">
+    <img src="{{this.thumbnail}}" alt="{{this.title}}">
+    <div class="content">
+      <h3>{{this.title}}</h3>
+      <p>{{this.price}}</p>
+      <p>{{this.description}}</p>
+
+      <!-- Mostrar el ID del producto -->
+      <p>ID del producto: {{this._id}}</p>  <!-- Aquí es donde mostramos el ID -->
+
+      <!-- Botón para eliminar el producto, asegurándote de que el data-id esté configurado -->
+      <button class="btn delete-btn" data-id="{{this._id}}">Eliminar</button>
+      
+      
+      <a href="/addToCart/{{this._id}}" class="btn">Agregar al carrito</a>
+    </div>
+  </div>
+  {{/each}}
+</div>
+
+
+
+<form action="/products" method="GET" id="filterForm">
+  <label for="query">Buscar:</label>
+  <input type="text" name="query" id="query" placeholder="Buscar producto..." value="{{query}}">
+  
+  <label for="sort">Ordenar:</label>
+  <select name="sort" id="sort">
+    <option value="" {{#unless sort}}selected{{/unless}}>Sin ordenar</option>
+    <option value="asc" {{#if (eq sort "asc")}}selected{{/if}}>Precio Ascendente</option>
+    <option value="desc" {{#if (eq sort "desc")}}selected{{/if}}>Precio Descendente</option>
+  </select>
+
+  <label for="limit">Productos por página:</label>
+  <input type="number" name="limit" id="limit" min="1" value="{{limit}}">
+
+  <button type="submit" class="btn">Filtrar</button>
+</form>
+
+<div id="pagination">
+  {{#if hasPrevPage}}
+    <a href="/products?page={{prevPage}}" class="btn">Página anterior</a>
+  {{else}}
+    <button class="btn disabled" disabled>Página anterior</button>
+  {{/if}}
+
+  <span class="current-page">Página {{currentPage}} de {{totalPages}}</span>
+
+  {{#if hasNextPage}}
+    <a href="/products?page={{nextPage}}" class="btn">Página siguiente</a>
+  {{else}}  
+    <button class="btn disabled" disabled>Página siguiente</button>
+  {{/if}}
+</div>
+
+<!-- 🛠 SCRIPT PARA ELIMINACIÓN DE PRODUCTOS SIN RECARGAR -->
+<script>
+  document.querySelectorAll('.delete-btn').forEach(button => {
+  button.addEventListener('click', async (event) => {
+    const productId = event.target.getAttribute('data-id');
+    
+    // Verifica si el ID está presente
+    if (!productId) {
+      alert('No se encontró el ID del producto');
+      return;
+    }
+
+    // Realiza la solicitud DELETE
+    try {
+      const response = await fetch(`/api/products/${productId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Si la eliminación es exitosa, elimina la tarjeta del producto del DOM
+        const productCard = document.getElementById(`product-${productId}`);
+        if (productCard) {
+          productCard.remove();
+        }
+        alert('Producto eliminado correctamente');
+      } else {
+        alert(result.message || 'Hubo un problema al eliminar el producto');
+      }
+    } catch (error) {
+      console.error('Error al eliminar el producto:', error);
+      alert('Error al eliminar el producto');
+    }
+  });
+});
+
+
+</script>
