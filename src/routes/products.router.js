@@ -1,11 +1,11 @@
 import { Router } from "express";
-import ProductsManager from '../managers/productManager.js';
+import ProductsManager from '../class/productManager.js'
 import { __dirname } from '../utils.js'
 import { socketServer } from "../index.js";
-import { ProductsModel } from "../models/Product.model.js";
+import { productModel } from "../models/Product.model.js";
 
 const router = Router()
-const productManager = new ProductsManager();
+
 
 
     router.get("/", async (req, res) => {
@@ -15,7 +15,7 @@ const productManager = new ProductsManager();
           'desc': -1
         }
       
-        const products = await ProductsModel.paginate(
+        const products = await productModel.paginate(
           { ...query },
           { 
             limit,
@@ -34,9 +34,8 @@ const productManager = new ProductsManager();
 
     router.get("/:id", async (req, res) => {
         const { id } = req.params;
-        
       
-        const productFinded = await ProductsModel.findById(id);
+        const productFinded = await productModel.findById(id);
       
         const status = productFinded ? 200 : 404;
       
@@ -48,7 +47,7 @@ const productManager = new ProductsManager();
      
       
         const prod = req.body;
-        const result = await ProductsModel.create({
+        const result = await productModel.create({
           ...prod,
        
         });
@@ -60,7 +59,7 @@ const productManager = new ProductsManager();
         const { body, params } = req;
         const { id } = params;
         const product = body;
-        const productUpdated = await ProductsModel.findByIdAndUpdate(id, {
+        const productUpdated = await productModel.findByIdAndUpdate(id, {
           ...product,
          
         }, { new: true });
@@ -68,78 +67,11 @@ const productManager = new ProductsManager();
         res.status(201).json({ message: "Updated successfully", payload: productUpdated });
       });
       
- /*      router.delete("/:id", async (req, res) => {
+      router.delete("/:id", async (req, res) => {
         const { id } = req.params;
-        const isDelete = await ProductsModel.findByIdAndDelete(id);
+        const isDelete = await productModel.findByIdAndDelete(id);
       
         res.status(isDelete ? 200 : 400).json({ payload: isDelete });
-      }); */
-
-      /* router.delete("/:id", async (req, res) => {
-        const { id } = req.params;
-        console.log("Eliminar producto con id:", id);  // Esto para verificar que el id es correcto
-      
-        try {
-          const isDelete = await ProductsModel.findByIdAndDelete(id);
-          
-          if (isDelete) {
-            console.log(`Producto con id ${id} eliminado`);
-            res.status(200).json({ payload: isDelete });
-          } else {
-            console.log(`Producto con id ${id} no encontrado`);
-            res.status(400).json({ message: 'Producto no encontrado' });
-          }
-        } catch (error) {
-          console.error("Error al eliminar el producto:", error);
-          res.status(500).json({ message: 'Error al eliminar el producto', error: error.message });
-        }
-      }); */
-      /* 
-      router.delete("/:id", async (req, res) => {
-        const { id } = req.params;
-        console.log("Eliminar producto con id:", id);
-
-
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-          return res.status(400).json({ message: "ID no válido" });
-        }
-      
-        try {
-          const deletedProduct = await ProductsModel.findByIdAndDelete(id);
-      
-          if (!deletedProduct) {
-            return res.status(404).json({ message: "Producto no encontrado" });
-          }
-      
-          return res.status(200).json({ message: "Producto eliminado correctamente" });
-        } catch (error) {
-          console.error("Error al eliminar el producto:", error);
-          return res.status(500).json({ message: "Error interno del servidor" });
-        }
-      }); */
-      router.delete("/:id", async (req, res) => {
-        const { id } = req.params;
-      
-        // Verifica si el ID es válido
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-          return res.status(400).json({ message: "ID no válido" });
-        }
-      
-        try {
-          const deletedProduct = await ProductsModel.findByIdAndDelete(id);
-      
-          if (!deletedProduct) {
-            return res.status(404).json({ message: "Producto no encontrado" });
-          }
-      
-          return res.status(200).json({ message: "Producto eliminado correctamente" });
-        } catch (error) {
-          console.error("Error al eliminar el producto:", error);
-          return res.status(500).json({ message: "Error interno del servidor" });
-        }
       });
-      
-
-    
 
 export default router
