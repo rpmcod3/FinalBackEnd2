@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
+
 const cartCollection = 'carts';
 
 const cartSchema = new Schema({
@@ -18,4 +19,9 @@ const cartSchema = new Schema({
     },
 });
 
-export const cartModel = mongoose.model(cartCollection, cartSchema)
+
+
+export const CartModel = mongoose.model(cartCollection, cartSchema);
+
+
+

@@ -69,7 +69,7 @@ export function initializePassport() {
   );
 
   passport.use(
-    "jwt",
+    "jwt", //current
     new JWTStrategy(
       {
         secretOrKey: JWT_SECRET,

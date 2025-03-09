@@ -3,7 +3,7 @@ import passport from "passport";
 
 import { AuthController } from "../controllers/auth.controllers.js";
 
-export const authRouter = Router();
+const authRouter = Router();
 
 authRouter.post(
   "/login",
@@ -22,3 +22,6 @@ authRouter.get(
   passport.authenticate("jwt", { session: false }),
   AuthController.current
 );
+
+export default authRouter
+
