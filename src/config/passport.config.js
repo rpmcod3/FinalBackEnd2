@@ -15,27 +15,45 @@ export function initializePassport() {
         passReqToCallback: true,
       },
       async (req, email, password, done) => {
-        const { firstName, lastName, age } = req.body;
-        /* const { firstName, lastName, age, password } = req.body; */
+        console.log("Received request body:", req.body);
+        
 
-        if (!email || !password || !firstName || !lastName || !age) {
-          return done(null, false, { message: "Error, todos los campos son requeridos" });
-        }
+        const { first_name, last_name, age, role } = req.body;
+        console.log("Extracted fields:", { first_name, last_name, age, role });
 
-        const hashedPassword = await createHash(password);
+      if (!email || !password || !first_name || !last_name || !age) {
+      return done(null, false, { message: "Error, todos los campos son requeridos" });
+}
 
-        try {
-          const user = await userModel.create({
-            email,
-            password: hashedPassword,
-            first_name: firstName,
-            last_name: lastName,
-            age,
-          });
+        
+
+          
+const hashedPassword = await createHash(password);
+try {
+  // Create the user
+  const user = await userModel.create({
+    email,
+    password: hashedPassword,
+    first_name: first_name,  
+    last_name: last_name,    
+    age,
+    role: role || "user"
+  });
+
+
+
+          console.log("User created successfully:", user);  
 
           return done(null, user);
         } catch (error) {
-          return done(error);
+
+           
+        if (error.code === 11000) {
+          return done(null, false, { message: "El correo ya está registrado" });
+        }
+
+        console.log("Error during user creation:", error);
+        return done(error);
         }
       }
     )
@@ -55,7 +73,15 @@ export function initializePassport() {
 
           if (!user) return done(null, false, { message: "Usuario no encontrado" });
 
+          /* const isValidPassword = await verifyPassword(password, user.password); */
           const isValidPassword = await verifyPassword(password, user.password);
+
+console.log("Usuario encontrado:", user.email);
+console.log("Contraseña ingresada:", password);
+console.log("Contraseña en BD:", user.password);
+console.log("¿Contraseña válida?:", isValidPassword);
+
+
 
           if (!isValidPassword)
             return done(null, false, { message: " password invalido " });
@@ -69,7 +95,7 @@ export function initializePassport() {
   );
 
   passport.use(
-    "jwt", //current
+    "jwt", 
     new JWTStrategy(
       {
         secretOrKey: JWT_SECRET,
@@ -95,10 +121,11 @@ export function initializePassport() {
 
       return done(null, user);
     } catch (error) {
-      return done(`Error: ${error.message}`);
+      done(error);
     }
   });
 }
+
 
 function cookieExtractor(req) {
   let token = null;

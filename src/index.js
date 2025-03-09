@@ -1,7 +1,9 @@
 import express from 'express';
+import session from "express-session";
 import mongoose from 'mongoose';
 import morgan from 'morgan';
 import passport from 'passport';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.routes.js';
 import { initializePassport } from './config/passport.config.js';
@@ -19,10 +21,12 @@ import ProductsManager from './managers/productManager.js';
 import { CartModel } from './models/Cart.model.js'; 
 import { mongoConnection } from './connection/mongo.js';
 import { engine } from "express-handlebars";
+import sessionRouter  from "./routes/session.routes.js";
 
 
 const app = express()
 mongoConnection()
+
 
 
 
@@ -35,14 +39,21 @@ app.set('view engine', 'handlebars');
 app.set('views', __dirname + '/views');
 
 app.use(morgan("dev"));
-app.use(express.json())
-app.use(express.urlencoded({ extended:true }))
+app.use(express.json());
+app.use(express.urlencoded({ extended:true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-
-initializePassport();
-app.use(passport.initialize());
-
+app.use(
+    session({
+      secret: process.env.SESSION_SECRET || "s3cr3t", 
+      resave: false,
+      saveUninitialized: true,
+      cookie: { secure: false }, 
+    })
+  );
+  initializePassport();
+  app.use(passport.initialize());
+  app.use(passport.session());
 
 app.use("/api/auth", authRoutes);
 app.use("/", viewsRoute);
@@ -50,6 +61,7 @@ app.use('/api/products', productsRoute)
 app.use('/api/carts', cartsRoute)
 app.use('/home', homeRoute)
 app.use('/realtimeproducts', realTimeProducts) 
+app.use("/api/sessions", sessionRouter);
 
 
 
@@ -124,24 +136,3 @@ export default app;
 
 
 
-
-    /* 
-    socket.on('nuevo-producto', async (producto) => {
-        await productManager.addProduct(producto);
-        const updatedProductsList = await productManager.getAllProducts(); // Actualiza la lista de productos
-        socketServer.emit('realtime', updatedProductsList); // Emite la lista actualizada
-    });
-    
-    socket.on('update-product', async (producto) => {
-        await productManager.updateProduct(producto, producto.id);
-        const updatedProductsList = await productManager.getAllProducts(); // Actualiza la lista de productos
-        socketServer.emit('realtime', updatedProductsList); // Emite la lista actualizada
-    });
-    
-    socket.on('delete-product', async (id) => {
-        await productManager.deleteProduct(id);
-        const updatedProductsList = await productManager.getAllProducts(); // Actualiza la lista de productos
-        socketServer.emit('realtime', updatedProductsList); // Emite la lista actualizada
-    });
-
- */

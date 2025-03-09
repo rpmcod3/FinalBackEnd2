@@ -6,20 +6,20 @@ const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   age: { type: Number, required: true },
   password: { type: String, required: true },
-  role: {
-    type: String,
-    required: true,
-    enum: ["admin", "user"],
-    default: "user",
-  },
+  cart: { type: Schema.Types.ObjectId, ref: "Carts" },
+  role: { type: String, enum: ["admin", "user"], default: "user" },
 });
 
-userSchema.pre("save", async function (next) {
-    if (this.email.includes("@") && this.email.includes(".")) {
+
+
+  userSchema.pre("save", async function (next) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailRegex.test(this.email)) {
       return next();
     }
-  
     next(new Error("Email no valido"));
   });
   
+
+
   export const userModel = model("user", userSchema);

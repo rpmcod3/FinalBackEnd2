@@ -1,6 +1,7 @@
 import { generateToken } from "../utils/jwt.js";
 
 export class AuthController {
+
   static async login(req, res) {
     console.log(req.user);
 
@@ -18,9 +19,12 @@ export class AuthController {
   }
 
   static async register(req, res) {
+    if (!req.user) {
+      return res.status(400).json({ message: "User registration failed." });
+    }
     res.json(req.user);
   }
-
+  
   static async current(req, res) {
     res.json(req.user);
   }
