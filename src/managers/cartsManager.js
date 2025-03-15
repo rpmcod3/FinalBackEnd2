@@ -97,58 +97,24 @@ class CartsManager {
     }
   }
 
-  /* 
-  // Método para eliminar un producto del carrito
   async deleteProductFromCart(cid, pid) {
     try {
-      const cart = await CartModel.findById(cid);
-      if (!cart) {
-        console.log('Carrito no encontrado');
-        return;
-      }
-
-      // Buscar el índice del producto en el carrito
-      const productIndex = cart.products.findIndex(
-        (item) => item.productId.toString() === pid
-      );
-
-      if (productIndex === -1) {
-        console.log('Producto no encontrado en el carrito');
-        return;
-      }
-
-      // Eliminar el producto
-      cart.products.splice(productIndex, 1);
-
-      // Guardar el carrito actualizado
-      await cart.save();
-      console.log('Producto eliminado del carrito');
-      return cart; // Retorna el carrito actualizado
-    } catch (error) {
-      console.error('Error al eliminar el producto del carrito:', error);
-      throw error;
-    }
-  }
-
- */
-  async deleteProductFromCart(cid, pid) {
-    try {
-      // Buscar el carrito por ID
+      
       const cart = await CartModel.findById(cid);
       if (!cart) {
         console.log('Carrito no encontrado');
         return;
       }
   
-      // Asegurarnos de que 'products' es un array
+      
       if (!Array.isArray(cart.products)) {
         console.log('El carrito no contiene productos válidos');
         return;
       }
   
-      // Buscar el producto en el carrito
+     
       const productIndex = cart.products.findIndex(
-        (item) => item.product && item.product.toString() === pid // Comprobamos si product existe
+        (item) => item.product && item.product.toString() === pid 
       );
   
       if (productIndex === -1) {
@@ -156,14 +122,13 @@ class CartsManager {
         return;
       }
   
-      // Eliminar el producto del carrito
+      
       cart.products.splice(productIndex, 1);
   
-      // Guardar el carrito actualizado
+     
       await cart.save();
       console.log('Producto eliminado del carrito');
-      return cart; // Retornamos el carrito actualizado
-  
+      return cart; 
     } catch (error) {
       console.error('Error al eliminar el producto del carrito:', error);
       throw error;

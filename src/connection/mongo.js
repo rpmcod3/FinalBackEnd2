@@ -10,7 +10,7 @@ dotenv.config();
 export const mongoConnection = async () => {
     try{
         
-        await mongoose.connect(process.env.MONGO_URL, {dbName: 'NewDB_Ecommerce'})
+        await mongoose.connect(process.env.MONGO_URL, {dbName: 'NuevaDB_plantillausuarios'})
         console.log('BBDD conectada')
     } catch (e) {
         console.log(e)

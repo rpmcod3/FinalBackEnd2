@@ -8,6 +8,8 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   cart: { type: Schema.Types.ObjectId, ref: "Carts" },
   role: { type: String, enum: ["admin", "user"], default: "user" },
+
+  
 });
 
 

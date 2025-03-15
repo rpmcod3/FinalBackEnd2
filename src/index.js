@@ -56,10 +56,10 @@ app.use(
   app.use(passport.session());
 
 app.use("/api/auth", authRoutes);
-app.use("/", viewsRoute);
+app.use("/", homeRoute);
 app.use('/api/products', productsRoute)
 app.use('/api/carts', cartsRoute)
-app.use('/home', homeRoute)
+app.use('/home', viewsRoute)
 app.use('/realtimeproducts', realTimeProducts) 
 app.use("/api/sessions", sessionRouter);
 
@@ -133,6 +133,3 @@ socketServer.on('connection', async (socket)=>{
 });
 
 export default app;
-
-
-

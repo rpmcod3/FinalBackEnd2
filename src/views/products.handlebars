@@ -10,7 +10,6 @@
   </nav>
 </header>
 
-{{!-- 
 <div id="content">
   {{#each products}}
   <div class="card" id="product-{{this._id}}">
@@ -20,27 +19,10 @@
       <p>{{this.price}}</p>
       <p>{{this.description}}</p>
 
-      <!-- Botón para eliminar el producto, asegurándote de que el data-id esté configurado -->
-      <button class="btn delete-btn" data-id="{{this._id}}">Eliminar</button>
+     
+      <p>ID del producto: {{this._id}}</p> 
+
       
-      <a href="/addToCart/{{this._id}}" class="btn">Agregar al carrito</a>
-    </div>
-  </div>
-  {{/each}}
-</div> --}}
-<div id="content">
-  {{#each products}}
-  <div class="card" id="product-{{this._id}}">
-    <img src="{{this.thumbnail}}" alt="{{this.title}}">
-    <div class="content">
-      <h3>{{this.title}}</h3>
-      <p>{{this.price}}</p>
-      <p>{{this.description}}</p>
-
-      <!-- Mostrar el ID del producto -->
-      <p>ID del producto: {{this._id}}</p>  <!-- Aquí es donde mostramos el ID -->
-
-      <!-- Botón para eliminar el producto, asegurándote de que el data-id esté configurado -->
       <button class="btn delete-btn" data-id="{{this._id}}">Eliminar</button>
       
       
@@ -85,19 +67,19 @@
   {{/if}}
 </div>
 
-<!-- 🛠 SCRIPT PARA ELIMINACIÓN DE PRODUCTOS SIN RECARGAR -->
+
 <script>
   document.querySelectorAll('.delete-btn').forEach(button => {
   button.addEventListener('click', async (event) => {
     const productId = event.target.getAttribute('data-id');
     
-    // Verifica si el ID está presente
+    
     if (!productId) {
       alert('No se encontró el ID del producto');
       return;
     }
 
-    // Realiza la solicitud DELETE
+    
     try {
       const response = await fetch(`/api/products/${productId}`, {
         method: 'DELETE',
@@ -109,7 +91,7 @@
       const result = await response.json();
 
       if (response.ok) {
-        // Si la eliminación es exitosa, elimina la tarjeta del producto del DOM
+        
         const productCard = document.getElementById(`product-${productId}`);
         if (productCard) {
           productCard.remove();

@@ -30,7 +30,7 @@ export function initializePassport() {
           
 const hashedPassword = await createHash(password);
 try {
-  // Create the user
+  
   const user = await userModel.create({
     email,
     password: hashedPassword,
