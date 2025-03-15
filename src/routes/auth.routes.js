@@ -5,29 +5,30 @@ import { AuthController } from "../controllers/auth.controllers.js";
 
 const authRouter = Router();
 
+
+
 authRouter.post(
   "/login",
   passport.authenticate("login", { session: false }),
   AuthController.login
 );
 
+
 authRouter.post(
   "/register",
   (req, res, next) => {
     passport.authenticate("register", { session: false }, (err, user, info) => {
       if (err) {
-        return next(err); 
+        return next(err);
       }
       if (!user) {
         return res.status(400).json(info || { message: "Registration failed" });
       }
-      req.user = user; 
-      next(); 
+      req.user = user;
+      next();
     })(req, res, next);
   },
-  
   AuthController.register
-  
 );
 
 
@@ -37,5 +38,16 @@ authRouter.get(
   AuthController.current
 );
 
-export default authRouter
 
+authRouter.post(
+  "/reset-password-request",
+  AuthController.requestPasswordReset
+);
+
+
+authRouter.post(
+  "/reset-password",
+  AuthController.resetPassword
+);
+
+export default authRouter;
